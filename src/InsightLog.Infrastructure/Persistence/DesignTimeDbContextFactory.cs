@@ -16,6 +16,6 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<InsightLog
         var optionsBuilder = new DbContextOptionsBuilder<InsightLogDbContext>();
         optionsBuilder.UseSqlite(config.GetConnectionString("DefaultConnection"));
 
-        return new InsightLogDbContext(optionsBuilder.Options);
+        return new InsightLogDbContext(optionsBuilder.Options, null!);
     }
 }

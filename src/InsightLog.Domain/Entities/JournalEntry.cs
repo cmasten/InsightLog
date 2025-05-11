@@ -1,4 +1,5 @@
-﻿using InsightLog.Domain.Identifiers;
+﻿using InsightLog.Domain.Events;
+using InsightLog.Domain.Identifiers;
 
 namespace InsightLog.Domain.Entities;
 
@@ -44,6 +45,8 @@ public class JournalEntry : Entity, IAggregateRoot
 
         MoodTags = moodTags ?? new List<string>();
         IsDeleted = false;
+
+        AddDomainEvent(new JournalEntryCreatedDomainEvent(Id));
     }
 
     public void Edit(string newContent, List<string>? newTags = null)
