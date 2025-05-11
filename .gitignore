@@ -1,0 +1,31 @@
+# .NET
+bin/
+obj/
+*.db
+*.user
+*.suo
+*.vsp
+.vscode/
+.vs/
+Logs/
+
+# Docker
+*.tar
+*.pid
+*.log
+.env
+.env.*
+
+# EF Core
+Migrations/*.Designer.cs
+Migrations/*Snapshot.cs
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Rider
+.idea/
+
+# Node (if React comes later)
+node_modules/
