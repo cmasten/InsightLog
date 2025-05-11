@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   api:
     build:
@@ -11,3 +9,9 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - ASPNETCORE_ENVIRONMENT=Development
     container_name: insightlog-api
+    volumes:
+      - sqlite-data:/app
+
+volumes:
+  sqlite-data:
+

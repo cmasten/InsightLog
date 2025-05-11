@@ -16,9 +16,9 @@ public class JournalEntriesController(IMediator mediator) : ControllerBase
     /// <param name="userId">The ID of the user.</param>
     /// <returns>A list of journal entries.</returns>
     /// <response code="200">Returns the user's journal entries</response>
-    [HttpGet("user/{userId}")]
+    [HttpGet("user/{userId:guid}")]
     [ProducesResponseType(typeof(List<JournalEntryDto>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<List<JournalEntryDto>>> GetByUser(Guid userId)
+    public async Task<ActionResult<List<JournalEntryDto>>> GetByUser([FromRoute] Guid userId)
     {
         var result = await mediator.Send(new GetJournalEntries.Query(new UserId(userId)));
         return Ok(result);

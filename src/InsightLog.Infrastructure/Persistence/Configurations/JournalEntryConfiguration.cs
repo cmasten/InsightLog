@@ -27,8 +27,8 @@ public class JournalEntryConfiguration : IEntityTypeConfiguration<JournalEntry>
 
         builder.Property(j => j.UserId)
             .HasConversion(
-                id => id.ToString(),
-                value => new UserId(Guid.Parse(value)))
+                id => id.Value,
+                value => new UserId(value))
             .IsRequired();
 
         builder.Property(j => j.IsDeleted)

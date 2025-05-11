@@ -1,5 +1,4 @@
-﻿using InsightLog.Application.Dtos;
-using InsightLog.Application.Mappings;
+﻿using InsightLog.Application.Mappings;
 
 namespace InsightLog.Application.Features.JournalEntries;
 
@@ -34,7 +33,7 @@ public static class CreateJournalEntry
     {
         public Validator()
         {
-            RuleFor(x => x.UserId).NotNull().WithMessage("UserId is required.");
+            RuleFor(x => x.UserId).NotNull().NotEqual(x => x.UserId, default).WithMessage("UserId is required.");
             RuleFor(x => x.Content).NotEmpty().WithMessage("Content is required.");
             RuleFor(x => x.Content).MaximumLength(5000);
         }
