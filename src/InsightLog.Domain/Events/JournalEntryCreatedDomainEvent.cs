@@ -4,6 +4,6 @@ namespace InsightLog.Domain.Events;
 
 public class JournalEntryCreatedDomainEvent(JournalEntryId JournalId) : DomainEventBase
 {
-    public JournalEntryId JournalId { get; } = JournalId;
+    public JournalEntryId JournalEntryId { get; } = JournalId;
 }
 

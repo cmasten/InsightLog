@@ -1,4 +1,6 @@
-﻿using InsightLog.Application.Interfaces;
+﻿using InsightLog.Application.Common;
+using InsightLog.Application.Events.Handlers;
+using InsightLog.Application.Interfaces;
 using InsightLog.Infrastructure.Persistence;
 using InsightLog.Infrastructure.Persistence.Repositories;
 
@@ -18,6 +20,10 @@ public static class DependencyInjection
         services.AddScoped<IJournalEntryRepository, JournalEntryRepository>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.AddScoped<IAISummaryGenerator, FakeAISummaryGenerator>();
+
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<JournalEntryCreatedHandler>());
 
         return services;
     }

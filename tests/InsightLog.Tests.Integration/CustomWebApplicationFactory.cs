@@ -1,8 +1,6 @@
 ﻿using InsightLog.API;
-using InsightLog.Domain.Events;
+using InsightLog.Application.Events.Handlers;
 using InsightLog.Infrastructure.Persistence;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -43,8 +41,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             var db = scope.ServiceProvider.GetRequiredService<InsightLogDbContext>();
             db.Database.EnsureCreated(); // Required to initialize schema
 
-            // Register a fake handler for the domain event
-            services.AddScoped<INotificationHandler<JournalEntryCreatedDomainEvent>, FakeJournalEntryCreatedHandler>();
+            // Register the MediatR handlers
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<JournalEntryCreatedHandler>());
         });
     }
 

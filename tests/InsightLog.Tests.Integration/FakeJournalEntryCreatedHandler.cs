@@ -10,7 +10,7 @@ public class FakeJournalEntryCreatedHandler : INotificationHandler<JournalEntryC
 
     public Task Handle(JournalEntryCreatedDomainEvent notification, CancellationToken cancellationToken)
     {
-        FiredEvents.Add(notification.JournalId.Value);
+        FiredEvents.Add(notification.JournalEntryId.Value);
         return Task.CompletedTask;
     }
 }

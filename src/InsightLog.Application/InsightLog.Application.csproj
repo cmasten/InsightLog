@@ -16,8 +16,4 @@
     <ProjectReference Include="..\InsightLog.Domain\InsightLog.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Common\" />
-  </ItemGroup>
-
 </Project>
