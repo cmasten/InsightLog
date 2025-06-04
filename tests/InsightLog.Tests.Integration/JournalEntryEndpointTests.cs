@@ -46,8 +46,11 @@ public class JournalEntryEndpointTests(CustomWebApplicationFactory factory) : IC
         var response = await _client.PostAsJsonAsync(_baseUrl, command);
         response.EnsureSuccessStatusCode();
 
+        var dto = await response.Content.ReadFromJsonAsync<JournalEntryDto>();
+
         // Assert
         FakeJournalEntryCreatedHandler.FiredEvents.Should().ContainSingle();
+        FakeJournalEntryCreatedHandler.FiredEvents.Single().Should().Be(dto!.Id);
     }
 
 }
