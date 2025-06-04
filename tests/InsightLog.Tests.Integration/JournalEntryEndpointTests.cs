@@ -53,4 +53,25 @@ public class JournalEntryEndpointTests(CustomWebApplicationFactory factory) : IC
         FakeJournalEntryCreatedHandler.FiredEvents.Single().Should().Be(dto!.Id);
     }
 
+    [Fact]
+    public async Task EditJournalEntry_Should_Update_Entry()
+    {
+        var create = new CreateJournalEntry.Command(new UserId(Guid.NewGuid()), "Before edit", DateTime.UtcNow, []);
+
+        var createResponse = await _client.PostAsJsonAsync(_baseUrl, create);
+        createResponse.EnsureSuccessStatusCode();
+
+        var created = await createResponse.Content.ReadFromJsonAsync<JournalEntryDto>();
+
+        var editCommand = new EditJournalEntry.Command(default, "After edit", ["relaxed"]);
+        var editResponse = await _client.PutAsJsonAsync($"{_baseUrl}/{created!.Id}", editCommand);
+        editResponse.EnsureSuccessStatusCode();
+
+        var list = await _client.GetFromJsonAsync<List<JournalEntryDto>>($"{_baseUrl}/user/{created.UserId}");
+
+        list.Should().ContainSingle();
+        list![0].Content.Should().Be("After edit");
+        list[0].MoodTags.Should().Contain("relaxed");
+    }
+
 }

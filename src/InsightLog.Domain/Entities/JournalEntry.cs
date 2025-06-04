@@ -59,6 +59,8 @@ public class JournalEntry : Entity, IAggregateRoot
         Content = newContent.Trim();
         MoodTags = newTags ?? MoodTags;
         Summary = null; // Invalidate existing summary
+
+        AddDomainEvent(new JournalEntryEditedDomainEvent(Id));
     }
 
     public void SoftDelete()
