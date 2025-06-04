@@ -1,0 +1,34 @@
+@page "/journal"
+
+<h1>Journal Entries</h1>
+
+@if (entries is null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!entries.Any())
+{
+    <p>No entries.</p>
+}
+else
+{
+    <ul>
+        @foreach (var entry in entries)
+        {
+            <li>@entry.CreatedDate.ToShortDateString(): @entry.Content</li>
+        }
+    </ul>
+}
+
+@code {
+    private List<JournalEntryDto>? entries;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userId = Guid.NewGuid();
+        entries = await JournalService.GetEntriesAsync(userId);
+    }
+
+    [Inject]
+    public JournalEntryService JournalService { get; set; } = default!;
+}
