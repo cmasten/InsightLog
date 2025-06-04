@@ -3,7 +3,7 @@
 public interface IJournalEntryRepository
 {
     Task AddAsync(JournalEntry entry, CancellationToken cancellationToken);
-    // TODO:
-    // Task<JournalEntry?> GetByIdAsync(JournalEntryId id);
+    Task<JournalEntry?> GetByIdAsync(JournalEntryId id, CancellationToken cancellationToken);
+    Task UpdateAsync(JournalEntry entry, CancellationToken cancellationToken);
     Task<List<JournalEntry>> GetByUserIdAsync(UserId userId, CancellationToken cancellationToken);
 }
