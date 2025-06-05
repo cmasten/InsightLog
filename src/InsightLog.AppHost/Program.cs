@@ -1,5 +1,7 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-builder.AddProject<Projects.InsightLog_API>("insightlog-api");
+var api = builder.AddProject<Projects.InsightLog_API>("insightlog-api");
+builder.AddProject<Projects.InsightLog_Blazor>("insightlog-blazor")
+       .WithReference(api);
 
 builder.Build().Run();

@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\InsightLog.API\InsightLog.API.csproj" />
+    <ProjectReference Include="..\InsightLog.Blazor\InsightLog.Blazor.csproj" />
   </ItemGroup>
 
 </Project>
