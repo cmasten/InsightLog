@@ -1,4 +1,17 @@
 @page "/"
 
+@rendermode InteractiveServer
+
 <h1>Welcome to InsightLog</h1>
 <p>This is the Blazor interface.</p>
+
+<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick=OnClick >Go to Journal</MudButton>
+@count
+@code {
+    int count = 0;
+    void OnClick()
+    {
+        Console.WriteLine("Button clicked!");
+        count++;
+    }
+}

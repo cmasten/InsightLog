@@ -3,11 +3,15 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <StaticWebAssetBasePath>InsightLog.Blazor</StaticWebAssetBasePath>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\InsightLog.Application\InsightLog.Application.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MudBlazor" Version="6.7.0" />
+    <PackageReference Include="MudBlazor" Version="8.7.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 </Project>
