@@ -1,3 +1,4 @@
+using InsightLog.Blazor;
 using InsightLog.Blazor.Services;
 var builder = WebApplication.CreateBuilder(args);
 
