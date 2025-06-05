@@ -1,5 +1,6 @@
 using InsightLog.Blazor;
 using InsightLog.Blazor.Services;
+using MudBlazor.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorComponents()
@@ -11,6 +12,7 @@ builder.Services.AddHttpClient("Api", client =>
 });
 
 builder.Services.AddScoped<JournalEntryService>();
+builder.Services.AddMudServices();
 
 var app = builder.Build();
 
