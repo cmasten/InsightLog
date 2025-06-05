@@ -2,6 +2,10 @@
 
 <h1>Journal Entries</h1>
 
+<MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="OpenCreateDialog" Color="Color.Primary" Variant="Variant.Filled" class="mb-4">
+    New Entry
+</MudButton>
+
 @if (entries is null)
 {
     <p><em>Loading...</em></p>
@@ -31,4 +35,19 @@ else
 
     [Inject]
     public JournalEntryService JournalService { get; set; } = default!;
+
+    [Inject]
+    public IDialogService DialogService { get; set; } = default!;
+
+    private async Task OpenCreateDialog()
+    {
+        var dialog = DialogService.Show<JournalCreate>("New Journal Entry");
+        var result = await dialog.Result;
+        if (!result.Cancelled && result.Data is JournalEntryDto dto)
+        {
+            entries ??= new();
+            entries.Insert(0, dto);
+            StateHasChanged();
+        }
+    }
 }

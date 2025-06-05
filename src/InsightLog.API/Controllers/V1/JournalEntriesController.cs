@@ -29,14 +29,14 @@ public class JournalEntriesController(IMediator mediator) : ControllerBase
     /// </summary>
     /// <param name="command">The journal entry creation details.</param>
     /// <returns>The created journal entry.</returns>
-    /// <response code="200">Returns the created journal entry</response>
+    /// <response code="201">Returns the created journal entry</response>
     /// <response code="400">If the request is invalid</response>
     [HttpPost]
-    [ProducesResponseType(typeof(JournalEntryDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(JournalEntryDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<JournalEntryDto>> Create([FromBody] CreateJournalEntry.Command command)
     {
         var result = await mediator.Send(command);
-        return Ok(result);
+        return Created(string.Empty, result);
     }
 }
