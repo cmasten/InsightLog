@@ -10,7 +10,7 @@ public class JournalEntryCreatedHandler(
     IUnitOfWork unitOfWork,
     IAISummaryGenerator summaryGenerator) : IDomainEventHandler<JournalEntryCreatedDomainEvent>
 {
-    public async Task HandleAsync(JournalEntryCreatedDomainEvent domainEvent, CancellationToken cancellationToken = default)
+    public async Task Handle(JournalEntryCreatedDomainEvent domainEvent, CancellationToken cancellationToken = default)
     {
         var entry = await journalEntryRepository.GetByIdAsync(domainEvent.JournalEntryId, cancellationToken);
 

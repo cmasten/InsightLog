@@ -20,7 +20,7 @@
     public ISnackbar Snackbar { get; set; } = default!;
 
     [CascadingParameter]
-    public MudDialogInstance MudDialog { get; set; } = default!;
+    public IDialogReference MudDialog { get; set; } = default!;
 
     private async Task CreateEntry()
     {
@@ -37,7 +37,7 @@
 
     private void Cancel()
     {
-        MudDialog.Cancel();
+        MudDialog.Close();
     }
 
     public class JournalEntryModel

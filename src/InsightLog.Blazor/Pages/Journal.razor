@@ -41,9 +41,9 @@ else
 
     private async Task OpenCreateDialog()
     {
-        var dialog = DialogService.Show<JournalCreate>("New Journal Entry");
+        var dialog = await DialogService.ShowAsync<JournalCreate>("New Journal Entry");
         var result = await dialog.Result;
-        if (!result.Cancelled && result.Data is JournalEntryDto dto)
+        if (result != null && !result.Canceled && result.Data is JournalEntryDto dto)
         {
             entries ??= new();
             entries.Insert(0, dto);
