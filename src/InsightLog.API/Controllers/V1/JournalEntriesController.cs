@@ -25,6 +25,27 @@ public class JournalEntriesController(IMediator mediator) : ControllerBase
     }
 
     /// <summary>
+    /// Retrieves a journal entry by its identifier.
+    /// </summary>
+    /// <param name="id">The journal entry ID.</param>
+    /// <returns>The matching journal entry.</returns>
+    /// <response code="200">Returns the journal entry</response>
+    /// <response code="404">If no journal entry is found</response>
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(JournalEntryDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<JournalEntryDto>> GetById([FromRoute] Guid id)
+    {
+        var result = await mediator.Send(new GetJournalEntryById.Query(id));
+        if (result is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(result);
+    }
+
+    /// <summary>
     /// Creates a new journal entry.
     /// </summary>
     /// <param name="command">The journal entry creation details.</param>

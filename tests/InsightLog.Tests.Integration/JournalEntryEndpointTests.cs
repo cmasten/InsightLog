@@ -75,4 +75,27 @@ public class JournalEntryEndpointTests(CustomWebApplicationFactory factory) : IC
         entry.Summary!.Should().StartWith("[AI Summary]");
     }
 
+    [Fact]
+    public async Task GetJournalEntryById_Should_Return_Entry()
+    {
+        var createCommand = new CreateJournalEntry.Command(
+            new UserId(Guid.NewGuid()),
+            "Fetch by id test",
+            DateTime.UtcNow,
+            []);
+
+        var createResponse = await _client.PostAsJsonAsync(_url, createCommand);
+        createResponse.EnsureSuccessStatusCode();
+
+        var created = await createResponse.Content.ReadFromJsonAsync<JournalEntryDto>();
+
+        var getResponse = await _client.GetAsync($"{_url}/{created!.Id}");
+        getResponse.EnsureSuccessStatusCode();
+
+        var fetched = await getResponse.Content.ReadFromJsonAsync<JournalEntryDto>();
+
+        fetched.Should().NotBeNull();
+        fetched!.Id.Should().Be(created.Id);
+        fetched.Content.Should().Be(createCommand.Content);
+    }
 }
