@@ -8,6 +8,7 @@ using InsightLog.Infrastructure;
 using InsightLog.Infrastructure.Persistence;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.Sqlite;
 using Microsoft.OpenApi.Models;
 
 using Serilog;
@@ -85,14 +86,21 @@ public class Program
 
         var app = builder.Build();
 
-        // Apply EF Core migrations at startup
+        // Apply EF Core migrations or create the in-memory database at startup
         using (var scope = app.Services.CreateScope())
         {
             try
             {
                 var db = scope.ServiceProvider.GetRequiredService<InsightLogDbContext>();
-                var pending = db.Database.GetPendingMigrations().ToList();
-                db.Database.Migrate();
+                var connection = db.Database.GetDbConnection();
+                if (connection is SqliteConnection { DataSource: ":memory:" })
+                {
+                    db.Database.EnsureCreated();
+                }
+                else
+                {
+                    db.Database.Migrate();
+                }
             }
             catch (Exception ex)
             {
