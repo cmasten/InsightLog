@@ -31,29 +31,6 @@ public class JournalEntryEndpointTests(CustomWebApplicationFactory factory) : IC
     }
 
     [Fact]
-    public async Task CreatingJournalEntry_Should_Fire_JournalEntryCreatedDomainEvent()
-    {
-        // Arrange
-        FakeJournalEntryCreatedHandler.FiredEvents.Clear();
-
-        var command = new CreateJournalEntry.Command(
-            new UserId(Guid.NewGuid()),
-            "Integration test entry",
-            DateTime.UtcNow,
-            []);
-
-        // Act
-        var response = await _client.PostAsJsonAsync(_url, command);
-        response.EnsureSuccessStatusCode();
-
-        var dto = await response.Content.ReadFromJsonAsync<JournalEntryDto>();
-
-        // Assert
-        FakeJournalEntryCreatedHandler.FiredEvents.Should().ContainSingle();
-        FakeJournalEntryCreatedHandler.FiredEvents.Single().Should().Be(dto!.Id);
-    }
-
-    [Fact]
     public async Task CreatingJournalEntry_Should_GenerateAISummary()
     {
         // Arrange

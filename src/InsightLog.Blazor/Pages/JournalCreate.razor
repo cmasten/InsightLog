@@ -1,0 +1,51 @@
+@using System.ComponentModel.DataAnnotations
+
+<EditForm Model="@entry" OnValidSubmit="CreateEntry">
+    <DataAnnotationsValidator />
+    <MudTextField Label="Content" @bind-Value="entry.Content" Lines="5" Required="true" />
+    <MudDatePicker Label="Created" @bind-Date="entry.CreatedDate" />
+    <MudStack Row="true" Spacing="2" Class="mt-4">
+        <MudButton Type="Submit" Color="Color.Primary" Variant="Variant.Filled">Save</MudButton>
+        <MudButton OnClick="Cancel" Color="Color.Secondary" Variant="Variant.Text">Cancel</MudButton>
+    </MudStack>
+</EditForm>
+
+@code {
+    private JournalEntryModel entry = new();
+
+    [Inject]
+    public JournalEntryService JournalService { get; set; } = default!;
+
+    [Inject]
+    public ISnackbar Snackbar { get; set; } = default!;
+
+    [CascadingParameter]
+    public IDialogReference MudDialog { get; set; } = default!;
+
+    private async Task CreateEntry()
+    {
+        var command = new CreateJournalEntry.Command(
+            new UserId(Guid.NewGuid()),
+            entry.Content!,
+            entry.CreatedDate,
+            null);
+
+        var dto = await JournalService.CreateAsync(command);
+        Snackbar.Add("Entry created", Severity.Success);
+        MudDialog.Close(DialogResult.Ok(dto));
+    }
+
+    private void Cancel()
+    {
+        MudDialog.Close();
+    }
+
+    public class JournalEntryModel
+    {
+        [Required]
+        [MaxLength(5000)]
+        public string Content { get; set; } = string.Empty;
+
+        public DateTime? CreatedDate { get; set; } = DateTime.UtcNow;
+    }
+}
