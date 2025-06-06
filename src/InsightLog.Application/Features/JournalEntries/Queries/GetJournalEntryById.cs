@@ -1,3 +1,5 @@
+using InsightLog.Application.Mappings;
+
 namespace InsightLog.Application.Features.JournalEntries.Queries;
 
 public static class GetJournalEntryById

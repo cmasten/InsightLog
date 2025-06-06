@@ -1,4 +1,6 @@
-﻿namespace InsightLog.API.Controllers.V1;
+﻿using InsightLog.Application.Features.JournalEntries.Queries;
+
+namespace InsightLog.API.Controllers.V1;
 
 /// <summary>
 /// Handles operations related to user journal entries.
