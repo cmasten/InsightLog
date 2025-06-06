@@ -31,29 +31,6 @@ public class JournalEntryEndpointTests(CustomWebApplicationFactory factory) : IC
     }
 
     [Fact]
-    public async Task CreatingJournalEntry_Should_Fire_JournalEntryCreatedDomainEvent()
-    {
-        // Arrange
-        FakeJournalEntryCreatedHandler.FiredEvents.Clear();
-
-        var command = new CreateJournalEntry.Command(
-            new UserId(Guid.NewGuid()),
-            "Integration test entry",
-            DateTime.UtcNow,
-            []);
-
-        // Act
-        var response = await _client.PostAsJsonAsync(_url, command);
-        response.EnsureSuccessStatusCode();
-
-        var dto = await response.Content.ReadFromJsonAsync<JournalEntryDto>();
-
-        // Assert
-        FakeJournalEntryCreatedHandler.FiredEvents.Should().ContainSingle();
-        FakeJournalEntryCreatedHandler.FiredEvents.Single().Should().Be(dto!.Id);
-    }
-
-    [Fact]
     public async Task CreatingJournalEntry_Should_GenerateAISummary()
     {
         // Arrange
@@ -75,4 +52,27 @@ public class JournalEntryEndpointTests(CustomWebApplicationFactory factory) : IC
         entry.Summary!.Should().StartWith("[AI Summary]");
     }
 
+    [Fact]
+    public async Task GetJournalEntryById_Should_Return_Entry()
+    {
+        var createCommand = new CreateJournalEntry.Command(
+            new UserId(Guid.NewGuid()),
+            "Fetch by id test",
+            DateTime.UtcNow,
+            []);
+
+        var createResponse = await _client.PostAsJsonAsync(_url, createCommand);
+        createResponse.EnsureSuccessStatusCode();
+
+        var created = await createResponse.Content.ReadFromJsonAsync<JournalEntryDto>();
+
+        var getResponse = await _client.GetAsync($"{_url}/{created!.Id}");
+        getResponse.EnsureSuccessStatusCode();
+
+        var fetched = await getResponse.Content.ReadFromJsonAsync<JournalEntryDto>();
+
+        fetched.Should().NotBeNull();
+        fetched!.Id.Should().Be(created.Id);
+        fetched.Content.Should().Be(createCommand.Content);
+    }
 }

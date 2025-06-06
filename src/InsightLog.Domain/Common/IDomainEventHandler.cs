@@ -1,6 +1,8 @@
-﻿namespace InsightLog.Domain.Common;
+﻿using MediatR;
 
-public interface IDomainEventHandler<TEvent> where TEvent : IDomainEvent
+namespace InsightLog.Domain.Common;
+
+public interface IDomainEventHandler<TEvent> : INotificationHandler<TEvent> where TEvent : IDomainEvent
 {
-    Task HandleAsync(TEvent domainEvent, CancellationToken cancellationToken = default);
+    Task Handle(TEvent domainEvent, CancellationToken cancellationToken = default);
 }
