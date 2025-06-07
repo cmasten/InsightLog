@@ -16,13 +16,13 @@ public class JournalEntryRepository(InsightLogDbContext context) : IJournalEntry
     public async Task<JournalEntry?> GetByIdAsync(JournalEntryId id, CancellationToken cancellationToken)
     {
         return await context.JournalEntries
-            .SingleOrDefaultAsync(j => j.Id == id, cancellationToken);
+            .SingleOrDefaultAsync(j => j.Id == id && !j.IsDeleted, cancellationToken);
     }
 
     public async Task<List<JournalEntry>> GetByUserIdAsync(UserId userId, CancellationToken cancellationToken)
     {
         return await context.JournalEntries
-            .Where(j => j.UserId == userId)
+            .Where(j => j.UserId == userId && !j.IsDeleted)
             .ToListAsync(cancellationToken);
     }
 
