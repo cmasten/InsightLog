@@ -1,53 +1,32 @@
 @page "/journal"
 
-<h1>Journal Entries</h1>
+@using InsightLog.Application.Dtos
+@inject HttpClient Http
 
-<MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="OpenCreateDialog" Color="Color.Primary" Variant="Variant.Filled" class="mb-4">
-    New Entry
-</MudButton>
+<div class="container">
+    <div class="sidebar">
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenCreateEntryDialog" Style="margin-bottom: 1rem; width: 100%;">
+            New Entry
+        </MudButton>
 
-@if (entries is null)
-{
-    <p><em>Loading...</em></p>
-}
-else if (!entries.Any())
-{
-    <p>No entries.</p>
-}
-else
-{
-    <ul>
         @foreach (var entry in entries)
         {
-            <li>@entry.CreatedDate.ToShortDateString(): @entry.Content</li>
+            <div class="entry-preview" @onclick="() => SelectEntry(entry)">
+                <div class="entry-date">@entry.CreatedDate.ToString("MMMM d, yyyy")</div>
+                <div class="entry-snippet">"@entry.Content.Substring(0, Math.Min(entry.Content.Length, 40))..."</div>
+            </div>
         }
-    </ul>
-}
+    </div>
 
-@code {
-    private List<JournalEntryDto>? entries;
-
-    protected override async Task OnInitializedAsync()
-    {
-        var userId = Guid.NewGuid();
-        entries = await JournalService.GetEntriesAsync(userId);
-    }
-
-    [Inject]
-    public JournalEntryService JournalService { get; set; } = default!;
-
-    [Inject]
-    public IDialogService DialogService { get; set; } = default!;
-
-    private async Task OpenCreateDialog()
-    {
-        var dialog = await DialogService.ShowAsync<JournalCreate>("New Journal Entry");
-        var result = await dialog.Result;
-        if (result != null && !result.Canceled && result.Data is JournalEntryDto dto)
+    <div class="detail">
+        @if (selectedEntry is not null)
         {
-            entries ??= new();
-            entries.Insert(0, dto);
-            StateHasChanged();
+            <div class="entry-full-date">@selectedEntry.CreatedDate.ToString("dddd, MMMM d, yyyy - h:mm tt")</div>
+            <div class="entry-content">@selectedEntry.Content</div>
+            <div class="summary-box">
+                <div class="summary-label">AI Summary:</div>
+                <div>@selectedEntry.Summary</div>
+            </div>
         }
-    }
-}
+    </div>
+</div>

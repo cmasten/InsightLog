@@ -1,4 +1,6 @@
-﻿using InsightLog.Application.Features.JournalEntries.Queries;
+﻿using InsightLog.Application.Features.JournalEntries;
+using InsightLog.Application.Features.JournalEntries.Queries;
+using InsightLog.Application.Dtos;
 
 namespace InsightLog.API.Controllers.V1;
 
@@ -61,5 +63,26 @@ public class JournalEntriesController(IMediator mediator) : ControllerBase
     {
         var result = await mediator.Send(command);
         return Created(string.Empty, result);
+    }
+
+    /// <summary>
+    /// Updates an existing journal entry.
+    /// </summary>
+    /// <param name="id">The journal entry ID.</param>
+    /// <param name="command">The update details.</param>
+    /// <returns>The updated journal entry.</returns>
+    /// <response code="200">Returns the updated journal entry</response>
+    /// <response code="404">If no journal entry is found</response>
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType(typeof(JournalEntryDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<JournalEntryDto>> Update([FromRoute] Guid id, [FromBody] UpdateJournalEntry.Command command)
+    {
+        if (id != command.Id)
+            return BadRequest();
+        var result = await mediator.Send(command);
+        if (result is null)
+            return NotFound();
+        return Ok(result);
     }
 }

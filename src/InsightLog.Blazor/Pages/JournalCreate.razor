@@ -1,31 +1,43 @@
 @using System.ComponentModel.DataAnnotations
+@inject ISnackbar Snackbar
+@inject JournalEntryService JournalService
 
-<EditForm Model="@entry" OnValidSubmit="CreateEntry">
-    <DataAnnotationsValidator />
-    <MudTextField Label="Content" @bind-Value="entry.Content" Lines="5" Required="true" />
-    <MudDatePicker Label="Created" @bind-Date="entry.CreatedDate" />
-    <MudStack Row="true" Spacing="2" Class="mt-4">
-        <MudButton Type="Submit" Color="Color.Primary" Variant="Variant.Filled">Save</MudButton>
-        <MudButton OnClick="Cancel" Color="Color.Secondary" Variant="Variant.Text">Cancel</MudButton>
-    </MudStack>
-</EditForm>
+<MudDialog>
+    <TitleContent>New Journal Entry</TitleContent>
+    <DialogContent>
+        <EditForm Model="@entry" OnValidSubmit="CreateEntry">
+            <DataAnnotationsValidator />
+            <MudStack Spacing="3">
+                <MudTextField @bind-Value="entry.Content" Label="Content" Lines="6" Required="true" />
+                <MudDatePicker Label="Created On" @bind-Date="entry.CreatedDate" />
+                <MudStack Row="true" Justify="Justify.FlexEnd" Spacing="2"></MudStack>
+                <MudStack Row="true" Justify="Justify.FlexEnd" Spacing="2">
+                    <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary" Variant="Variant.Filled">Save</MudButton>
+                    <MudButton OnClick="Cancel" Color="Color.Secondary" Variant="Variant.Text">Cancel</MudButton>
+                </MudStack>
+            </MudStack>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+
 
 @code {
-    private JournalEntryModel entry = new();
-
-    [Inject]
-    public JournalEntryService JournalService { get; set; } = default!;
-
-    [Inject]
-    public ISnackbar Snackbar { get; set; } = default!;
-
     [CascadingParameter]
-    public IDialogReference MudDialog { get; set; } = default!;
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    private void Submit() => MudDialog.Close(DialogResult.Ok(true));
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private JournalEntryModel entry = new()
+    {
+        CreatedDate = DateTime.UtcNow
+    };
 
     private async Task CreateEntry()
     {
         var command = new CreateJournalEntry.Command(
-            new UserId(Guid.NewGuid()),
+            new UserId(Guid.NewGuid()), // Replace with actual user context
             entry.Content!,
             entry.CreatedDate,
             null);
@@ -35,17 +47,12 @@
         MudDialog.Close(DialogResult.Ok(dto));
     }
 
-    private void Cancel()
-    {
-        MudDialog.Close();
-    }
-
     public class JournalEntryModel
     {
         [Required]
         [MaxLength(5000)]
         public string Content { get; set; } = string.Empty;
 
-        public DateTime? CreatedDate { get; set; } = DateTime.UtcNow;
+        public DateTime? CreatedDate { get; set; }
     }
 }
